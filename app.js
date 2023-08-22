@@ -14,12 +14,6 @@ const app = express()
 // ℹ️ This function is getting exported from the config folder. It runs most pieces of middleware
 require("./config")(app)
 
-// Middleware for parsing JSON request body
-app.use(express.json())
-
-// Middleware for parsing URL-encoded request body
-app.use(express.urlencoded({ extended: true }))
-
 // 👇 Start handling routes here
 const indexRoutes = require("./routes/index.routes")
 app.use("/", indexRoutes)

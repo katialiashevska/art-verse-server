@@ -10,7 +10,6 @@ const saltRounds = 10
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
     const { email, password, name } = req.body
-    console.log(req.body)
 
     // Check if the email or password or name is provided as an empty string
     if (email === "" || password === "" || name === "") {
@@ -71,7 +70,7 @@ router.post("/signup", (req, res, next) => {
 router.post("/login", (req, res, next) => {
     const { email, password } = req.body
 
-    // Check if email or password are provided as empty string
+    // Check if email or password is provided as an empty string
     if (email === "" || password === "") {
         res.status(400).json({ message: "Provide email and password." })
         return
@@ -112,7 +111,7 @@ router.post("/login", (req, res, next) => {
 })
 
 // GET  /auth/verify  -  Used to verify JWT stored on the client
-// CREATE NEW ROUTE
+// Create a new route
 router.get("/verify", isAuthenticated, (req, res, next) => {
     // If JWT token is valid the payload gets decoded by the
     // isAuthenticated middleware and made available on `req.payload`
