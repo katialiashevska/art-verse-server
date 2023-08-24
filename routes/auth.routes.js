@@ -9,18 +9,18 @@ const saltRounds = 10
 
 // POST /auth/signup  - Creates a new user in the database
 router.post("/signup", (req, res, next) => {
-    const { email, password, name } = req.body
+    const { name, email, password, passwordConfirmation } = req.body
 
-    // Check if the email or password or name is provided as an empty string
-    if (email === "" || password === "" || name === "") {
-        res.status(400).json({ message: "Provide email, password and name" })
+    // Check if the name or email or password is provided as an empty string
+    if (name === "" || email === "" || password === "" || passwordConfirmation === "") {
+        res.status(400).json({ message: "Please provide your name, email and password." })
         return
     }
 
     // Use regex to validate the email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
     if (!emailRegex.test(email)) {
-        res.status(400).json({ message: "Provide a valid email address." })
+        res.status(400).json({ message: "Please provide a valid email address." })
         return
     }
 
@@ -29,9 +29,16 @@ router.post("/signup", (req, res, next) => {
     if (!passwordRegex.test(password)) {
         res.status(400).json({
             message:
-                "Password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
+                "Your password must have at least 6 characters and contain at least one number, one lowercase and one uppercase letter.",
         })
         return
+    }
+
+    // Check if the provided password and password confirmation match
+    if (password !== passwordConfirmation) {
+        return res
+            .status(400)
+            .json({ message: "Password confirmation does not match your password." })
     }
 
     // Check the users collection if a user with the same email already exists
@@ -39,7 +46,7 @@ router.post("/signup", (req, res, next) => {
         .then(foundUser => {
             // If the user with the same email already exists, send an error response
             if (foundUser) {
-                return res.status(400).json({ message: "User already exists." })
+                return res.status(400).json({ message: "This user already exists." })
             }
 
             // If the email is unique, proceed to hash the password
@@ -52,17 +59,17 @@ router.post("/signup", (req, res, next) => {
         })
         .then(createdUser => {
             // Deconstruct the newly created user object to omit the password
-            const { email, name, _id } = createdUser
+            const { name, email, _id } = createdUser
 
             // Create a new object that doesn't expose the password
-            const user = { email, name, _id }
+            const user = { name, email, _id }
 
             // Send a json response containing the user object
             return res.status(201).json({ user: user })
         })
         .catch(err => {
             console.log(err)
-            return res.status(500).json({ message: "Internal Server Error" })
+            return res.status(500).json({ message: "Internal Server Error." })
         })
 })
 
@@ -72,7 +79,7 @@ router.post("/login", (req, res, next) => {
 
     // Check if email or password is provided as an empty string
     if (email === "" || password === "") {
-        res.status(400).json({ message: "Provide email and password." })
+        res.status(400).json({ message: "Please provide your email and password." })
         return
     }
 
