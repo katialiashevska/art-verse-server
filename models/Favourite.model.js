@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose")
 
-const artworkSchema = new Schema(
+const favouriteSchema = new Schema(
     {
         artist: {
             type: String,
@@ -27,7 +27,7 @@ const artworkSchema = new Schema(
             required: true,
             trim: true,
         },
-        img: {
+        image: {
             type: String,
             required: true,
         },
@@ -42,6 +42,6 @@ const artworkSchema = new Schema(
     }
 )
 
-const Artwork = model("Artwork", artworkSchema)
+const Favourite = model("Favourite", favouriteSchema)
 
-module.exports = Artwork
+module.exports = Favourite
