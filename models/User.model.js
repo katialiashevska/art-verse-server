@@ -18,16 +18,6 @@ const userSchema = new Schema(
             type: String,
             required: [true, "Password is required."],
         },
-        passwordConfirmation: {
-            type: String,
-            required: [true, "Password confirmation is required."],
-            validate: {
-                validator: function (value) {
-                    return value === this.password
-                },
-                message: "Password confirmation does not match.",
-            },
-        },
     },
     {
         // this second object adds extra properties: `createdAt` and `updatedAt`
