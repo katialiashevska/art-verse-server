@@ -13,15 +13,16 @@ router.get("/", isAuthenticated, (req, res, next) => {
         })
 })
 
-// POST /favourites - Create a new favourite for the logged-in user
+// POST /favourites - Create a new favourite artwork for the logged-in user
 router.post("/", isAuthenticated, (req, res, next) => {
     Favourite.create({
         user: req.payload._id,
-        artist: req.body.artist,
         title: req.body.title,
+        artist: req.body.artist,
         date: req.body.date,
         medium: req.body.medium,
         dimensions: req.body.dimensions,
+        altText: req.body.altText,
         image: req.body.image,
         comment: req.body.comment,
     })
@@ -59,12 +60,12 @@ router.put("/:favouriteId", isAuthenticated, (req, res, next) => {
         })
 })
 
-// DELETE /favourites/:favouriteId - Delete a favourite for the logged-in user
+// DELETE /favourites/:favouriteId - Delete a favourite artwork for the logged-in user
 router.delete("/:favouriteId", isAuthenticated, (req, res, next) => {
     const favouriteId = req.params.favouriteId
     Favourite.findByIdAndDelete({ _id: favouriteId, user: req.payload._id })
         .then(() => {
-            res.status(200).send()
+            res.status(200).json({ message: "Favourite artwork deleted successfully." })
         })
         .catch(error => {
             next(error)
