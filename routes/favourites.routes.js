@@ -1,8 +1,10 @@
 const router = require("express").Router()
 const Favourite = require("./../models/Favourite.model")
+const { isAuthenticated } = require("./../middleware/jwt.middleware")
 
-router.get("/", (req, res, next) => {
-    Favourite.find()
+// GET /favourites - Retrieve favourites for the logged-in user
+router.get("/", isAuthenticated, (req, res, next) => {
+    Favourite.find({ user: req.payload._id })
         .then(allFavourites => {
             res.json(allFavourites)
         })
@@ -11,8 +13,10 @@ router.get("/", (req, res, next) => {
         })
 })
 
-router.post("/", (req, res, next) => {
+// POST /favourites - Create a new favourite for the logged-in user
+router.post("/", isAuthenticated, (req, res, next) => {
     Favourite.create({
+        user: req.payload._id,
         artist: req.body.artist,
         title: req.body.title,
         date: req.body.date,
@@ -29,31 +33,36 @@ router.post("/", (req, res, next) => {
         })
 })
 
-router.get("/:favouriteId", (req, res, next) => {
-    const favouriteId = req.params.favouriteId
-    Favourite.findById(favouriteId)
-        .then(foundFavourite => {
-            res.status(200).json(foundFavourite)
-        })
-        .catch(error => {
-            next(error)
-        })
-})
-
-// router.put("/:cohortId", (req, res, next) => {
-//     const cohortId = req.params.cohortId
-//     Cohort.findByIdAndUpdate(cohortId, req.body, { new: true })
-//         .then(updatedCohort => {
-//             res.status(200).json(updatedCohort)
+// router.get("/:favouriteId", (req, res, next) => {
+//     const favouriteId = req.params.favouriteId
+//     Favourite.findById(favouriteId)
+//         .then(foundFavourite => {
+//             res.status(200).json(foundFavourite)
 //         })
 //         .catch(error => {
 //             next(error)
 //         })
 // })
 
-router.delete("/:favouriteId", (req, res, next) => {
+// PUT /favourites/:favouriteId - Edit a comment on each artwork for the logged-in user
+router.put("/:favouriteId", isAuthenticated, (req, res, next) => {
     const favouriteId = req.params.favouriteId
-    Favourite.findByIdAndDelete(favouriteId)
+    Favourite.findByIdAndUpdate(favouriteId, { comment: req.body.comment }, { new: true })
+        .then(updatedFavourite => {
+            if (!updatedFavourite) {
+                return res.status(404).json({ message: "Favourite artwork not found." })
+            }
+            res.status(200).json(updatedFavourite)
+        })
+        .catch(error => {
+            next(error)
+        })
+})
+
+// DELETE /favourites/:favouriteId - Delete a favourite for the logged-in user
+router.delete("/:favouriteId", isAuthenticated, (req, res, next) => {
+    const favouriteId = req.params.favouriteId
+    Favourite.findByIdAndDelete({ _id: favouriteId, user: req.payload._id })
         .then(() => {
             res.status(200).send()
         })

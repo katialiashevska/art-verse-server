@@ -2,6 +2,11 @@ const { Schema, model } = require("mongoose")
 
 const favouriteSchema = new Schema(
     {
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
         artist: {
             type: String,
             required: true,
@@ -34,6 +39,7 @@ const favouriteSchema = new Schema(
         comment: {
             type: String,
             trim: true,
+            default: "",
         },
     },
     {
