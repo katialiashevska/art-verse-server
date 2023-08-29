@@ -2,6 +2,10 @@ const { Schema, model } = require("mongoose")
 
 const favouriteSchema = new Schema(
     {
+        id: {
+            type: String,
+            required: true,
+        },
         user: {
             type: Schema.Types.ObjectId,
             ref: "User",
