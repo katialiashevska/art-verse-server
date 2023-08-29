@@ -13,6 +13,18 @@ router.get("/", isAuthenticated, (req, res, next) => {
         })
 })
 
+// GET /favourites/:favouriteId - Retrieve one favourite artwork for the logged-in user
+router.get("/:favouriteId", (req, res, next) => {
+    const favouriteId = req.params.favouriteId
+    Favourite.findOne({ id: favouriteId, user: req.payload._id })
+        .then(foundFavourite => {
+            res.status(200).json(foundFavourite)
+        })
+        .catch(error => {
+            next(error)
+        })
+})
+
 // POST /favourites - Create a new favourite artwork for the logged-in user
 router.post("/", isAuthenticated, (req, res, next) => {
     Favourite.create({
@@ -35,21 +47,13 @@ router.post("/", isAuthenticated, (req, res, next) => {
         })
 })
 
-// router.get("/:favouriteId", (req, res, next) => {
-//     const favouriteId = req.params.favouriteId
-//     Favourite.findById(favouriteId)
-//         .then(foundFavourite => {
-//             res.status(200).json(foundFavourite)
-//         })
-//         .catch(error => {
-//             next(error)
-//         })
-// })
-
 // PUT /favourites/:favouriteId - Edit a comment on each artwork for the logged-in user
 router.put("/:favouriteId", isAuthenticated, (req, res, next) => {
     const favouriteId = req.params.favouriteId
-    Favourite.findByIdAndUpdate(favouriteId, { comment: req.body.comment }, { new: true })
+    Favourite.findOneAndUpdate(
+        { id: favouriteId, user: req.payload._id, comment: req.body.comment },
+        { new: true }
+    )
         .then(updatedFavourite => {
             if (!updatedFavourite) {
                 return res.status(404).json({ message: "Favourite artwork not found." })

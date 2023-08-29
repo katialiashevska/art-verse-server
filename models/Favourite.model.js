@@ -52,6 +52,8 @@ const favouriteSchema = new Schema(
     }
 )
 
+favouriteSchema.index({ id: 1, user: 1 }, { unique: true })
+
 const Favourite = model("Favourite", favouriteSchema)
 
 module.exports = Favourite
