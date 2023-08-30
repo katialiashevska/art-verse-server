@@ -14,7 +14,7 @@ router.get("/", isAuthenticated, (req, res, next) => {
 })
 
 // GET /favourites/:favouriteId - Retrieve one favourite artwork for the logged-in user
-router.get("/:favouriteId", (req, res, next) => {
+router.get("/:favouriteId", isAuthenticated, (req, res, next) => {
     const favouriteId = req.params.favouriteId
     Favourite.findOne({ id: favouriteId, user: req.payload._id })
         .then(foundFavourite => {
