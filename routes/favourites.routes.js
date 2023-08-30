@@ -2,7 +2,7 @@ const router = require("express").Router()
 const Favourite = require("./../models/Favourite.model")
 const { isAuthenticated } = require("./../middleware/jwt.middleware")
 
-// GET /favourites - Retrieve favourites for the logged-in user
+// GET /favourites - Retrieve favourite artworks
 router.get("/", isAuthenticated, (req, res, next) => {
     Favourite.find({ user: req.payload._id })
         .then(allFavourites => {
@@ -13,7 +13,7 @@ router.get("/", isAuthenticated, (req, res, next) => {
         })
 })
 
-// GET /favourites/:favouriteId - Retrieve one favourite artwork for the logged-in user
+// GET /favourites/:favouriteId - Retrieve one favourite artwork
 router.get("/:favouriteId", isAuthenticated, (req, res, next) => {
     const favouriteId = req.params.favouriteId
     Favourite.findOne({ id: favouriteId, user: req.payload._id })
@@ -25,7 +25,7 @@ router.get("/:favouriteId", isAuthenticated, (req, res, next) => {
         })
 })
 
-// POST /favourites - Create a new favourite artwork for the logged-in user
+// POST /favourites - Create a new favourite artwork
 router.post("/", isAuthenticated, (req, res, next) => {
     Favourite.create({
         id: req.body.id,
@@ -47,17 +47,15 @@ router.post("/", isAuthenticated, (req, res, next) => {
         })
 })
 
-// PUT /favourites/:favouriteId - Edit a comment on each artwork for the logged-in user
+// PUT /favourites/:favouriteId - Edit a comment on a favourite artwork
 router.put("/:favouriteId", isAuthenticated, (req, res, next) => {
     const favouriteId = req.params.favouriteId
     Favourite.findOneAndUpdate(
-        { id: favouriteId, user: req.payload._id, comment: req.body.comment },
+        { id: favouriteId, user: req.payload._id },
+        { comment: req.body.comment },
         { new: true }
     )
         .then(updatedFavourite => {
-            if (!updatedFavourite) {
-                return res.status(404).json({ message: "Favourite artwork not found." })
-            }
             res.status(200).json(updatedFavourite)
         })
         .catch(error => {
@@ -65,7 +63,7 @@ router.put("/:favouriteId", isAuthenticated, (req, res, next) => {
         })
 })
 
-// DELETE /favourites/:favouriteId - Delete a favourite artwork for the logged-in user
+// DELETE /favourites/:favouriteId - Delete a favourite artwork
 router.delete("/:favouriteId", isAuthenticated, (req, res, next) => {
     const favouriteId = req.params.favouriteId
     Favourite.findOneAndDelete({ id: favouriteId, user: req.payload._id })
