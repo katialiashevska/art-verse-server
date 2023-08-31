@@ -37,7 +37,7 @@ router.post("/", isAuthenticated, (req, res, next) => {
         dimensions: req.body.dimensions,
         altText: req.body.altText,
         image: req.body.image,
-        comment: req.body.comment,
+        note: req.body.note,
     })
         .then(createdFavourite => {
             res.status(201).json(createdFavourite)
@@ -47,12 +47,12 @@ router.post("/", isAuthenticated, (req, res, next) => {
         })
 })
 
-// PUT /favourites/:favouriteId - Edit a comment on a favourite artwork
+// PUT /favourites/:favouriteId - Edit a note on a favourite artwork
 router.put("/:favouriteId", isAuthenticated, (req, res, next) => {
     const favouriteId = req.params.favouriteId
     Favourite.findOneAndUpdate(
         { id: favouriteId, user: req.payload._id },
-        { comment: req.body.comment },
+        { note: req.body.note },
         { new: true }
     )
         .then(updatedFavourite => {

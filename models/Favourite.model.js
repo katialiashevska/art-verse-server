@@ -40,7 +40,7 @@ const favouriteSchema = new Schema(
             type: String,
             required: true,
         },
-        comment: {
+        note: {
             type: String,
             trim: true,
             default: "",
