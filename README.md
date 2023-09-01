@@ -16,8 +16,6 @@ The API offers a variety of routes to work with favourite artworks. Each route i
 | PUT       | `/:favouriteId` | JSON         | Updates the specified favourite artwork by id     |
 | DELETE    | `/:favouriteId` | (empty)      | Deletes the specified favourite artwork by id     |
 
-<hr>
-
 ## Models
 
 ### User Model
@@ -27,8 +25,6 @@ The API offers a variety of routes to work with favourite artworks. Each route i
 | `name`     | _`String`_ | User's name. Required.                             |
 | `email`    | _`String`_ | User's email address. Required, unique, lowercase. |
 | `password` | _`String`_ | User's password. Required.                         |
-
-<hr>
 
 ### Favourite Model
 
@@ -43,5 +39,3 @@ The API offers a variety of routes to work with favourite artworks. Each route i
 | `dimensions` | _`String`_   | Artwork dimensions. Required.                                                      |
 | `image`      | _`String`_   | Artwork image. Required.                                                           |
 | `note`       | _`String`_   | Personalised note added by the user to each artwork.                               |
-
-<hr>
